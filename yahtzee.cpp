@@ -2,13 +2,19 @@
 #include <ctime>
 #include <cstdlib>
 #include <iomanip>
+#include <cctype> // Added by ST to make user's Y/N dice reroll response case-insensitive.
 
 /*******************************
  *
  * Yahtzee
  *
  * Starter code by Paul Wilkins
- * Last Modified: 02/04/2014
+ * Created: 02/04/2014
+ * Last modified: 01/30/2016
+ * by Sam Toman (Implemented scoring
+ * functions for 1-6; fixed dice-roll bug;
+ * made user input case-insensitive for
+ * dice-reroll prompt.
  *
  *******************************/
 
@@ -17,17 +23,20 @@
 // TODO: add yahtzee bonus score
 // TODO: implement scoring functions (see switch statement, line 125)
 // TODO: make ask reroll accept lowercase letters
-// BUG: dice not holding correct values
+// BUG: dice not holding correct values // Modified by ST on 01/30/2016; added +1
+// based on Rand() documentation: http://www.cplusplus.com/reference/cstdlib/rand/
 
 using namespace std;
 
 void printRoll(int n1, int n2, int n3, int n4, int n5);
 bool askReroll(int n);
 void printSeparator();
-void printScore(int onesScore, int twosScore, int threesScore, int foursScore,
+/* void printScore(int onesScore, int twosScore, int threesScore, int foursScore,
                 int fivesScore, int sixesScore, int threeOfAKind,
                 int fourOfAKind, int fullHouse, int smallStraight,
-                int largeStraight, int yahtzee, int chance);
+                int largeStraight, int yahtzee, int chance); */
+void printScore(int onesScore, int twosScore, int threesScore, int foursScore,
+                int fivesScore, int sixesScore);
 void printScoreLine(string name, int score);
 int getScoreOption(int onesScore, int twosScore, int threesScore, int foursScore,
                    int fivesScore, int sixesScore, int threeOfAKind,
@@ -71,11 +80,11 @@ int main()
     {
         int round = 1;
         ones = twos = threes = fours = fives = sixes = 0;
-        die1 = rand() % SIDES;
-        die2 = rand() % SIDES;
-        die3 = rand() % SIDES;
-        die4 = rand() % SIDES;
-        die5 = rand() % SIDES;
+        die1 = rand() % SIDES + 1;
+        die2 = rand() % SIDES + 1;
+        die3 = rand() % SIDES + 1;
+        die4 = rand() % SIDES + 1;
+        die5 = rand() % SIDES + 1;
 
         printRoll(die1, die2, die3, die4, die5);
 
@@ -89,23 +98,23 @@ int main()
 
             if (redo1)
             {
-                die1 = rand() % SIDES;
+                die1 = rand() % SIDES + 1;
             }
             if (redo2)
             {
-                die2 = rand() % SIDES;
+                die2 = rand() % SIDES + 1;
             }
             if (redo3)
             {
-                die3 = rand() % SIDES;
+                die3 = rand() % SIDES + 1;
             }
             if (redo4)
             {
-                die4 = rand() % SIDES;
+                die4 = rand() % SIDES + 1;
             }
             if (redo5)
             {
-                die5 = rand() % SIDES;
+                die5 = rand() % SIDES + 1;
             }
 
             printRoll(die1, die2, die3, die4, die5);
@@ -124,26 +133,27 @@ int main()
                                          fourOfAKind, fullHouse, smallStraight,
                                          largeStraight, yahtzee, chance);
 
-        /*switch (scoreOption)
+        switch (scoreOption)
         {
             case ONES:
-                onesScore = scoreOnes(ones, twos, threes, fours, fives, sixes);
+                onesScore = ones;
                 break;
             case TWOS:
-                twosScore = scoreTwos(ones, twos, threes, fours, fives, sixes);
+                twosScore = (twos * 2);
                 break;
             case THREES:
-                threesScore = scoreThrees(ones, twos, threes, fours, fives, sixes);
+                threesScore = (threes * 3);
                 break;
             case FOURS:
-                foursScore = scoreFours(ones, twos, threes, fours, fives, sixes);
+                foursScore = (fours * 4);
                 break;
             case FIVES:
-                fivesScore = scoreFives(ones, twos, threes, fours, fives, sixes);
+                fivesScore = (fives * 5);
                 break;
             case SIXES:
-                sixesScore = scoreSixes(ones, twos, threes, fours, fives, sixes);
+                sixesScore = (sixes * 6);
                 break;
+	} /*
             case THREE_OF_A_KIND:
                 threeOfAKind = scoreThreeOfAKind(ones, twos, threes, fours, fives, sixes);
                 break;
@@ -167,8 +177,9 @@ int main()
                 break;
         }*/
 
-        printScore(onesScore, twosScore, threesScore, foursScore, fivesScore, sixesScore,
-                   threeOfAKind, fourOfAKind, fullHouse, smallStraight, largeStraight, yahtzee, chance);
+        //printScore(onesScore, twosScore, threesScore, foursScore, fivesScore, sixesScore,
+                   //threeOfAKind, fourOfAKind, fullHouse, smallStraight, largeStraight, yahtzee, chance);
+	printScore(onesScore, twosScore, threesScore, foursScore, fivesScore, sixesScore);
     }
 }
 
@@ -208,7 +219,7 @@ bool askReroll(int n)
     {
         cout << "Would you like to reroll die " << n << "? (Y/N) ";
         cin >> ch;
-        switch (ch)
+        switch (toupper(ch)) //Added by ST
         {
             case 'Y':
                 return true;
@@ -231,10 +242,13 @@ bool askReroll(int n)
  * for the yahtzee game in its current state.
  *
  ********************************/
-void printScore(int onesScore, int twosScore, int threesScore, int foursScore,
+/*void printScore(int onesScore, int twosScore, int threesScore, int foursScore,
                 int fivesScore, int sixesScore, int threeOfAKind,
                 int fourOfAKind, int fullHouse, int smallStraight,
                 int largeStraight, int yahtzee, int chance)
+{*/
+void printScore(int onesScore, int twosScore, int threesScore, int foursScore,
+                int fivesScore, int sixesScore)
 {
     printSeparator();
     printScoreLine("Ones", onesScore);
@@ -249,6 +263,7 @@ void printScore(int onesScore, int twosScore, int threesScore, int foursScore,
     printSeparator();
     printScoreLine("Sixes", sixesScore);
     printSeparator();
+/*
     printScoreLine("Three of a kind", threeOfAKind);
     printSeparator();
     printScoreLine("Four of a kind", fourOfAKind);
@@ -262,7 +277,7 @@ void printScore(int onesScore, int twosScore, int threesScore, int foursScore,
     printScoreLine("Yahtzee", yahtzee);
     printSeparator();
     printScoreLine("Chance", chance);
-    printSeparator();
+    printSeparator();*/
 }
 
 /********************************
@@ -412,3 +427,6 @@ int tabulateDice(int n, int d1, int d2, int d3, int d4, int d5)
     if (d5 == n) ans++;
     return ans;
 }
+
+
+

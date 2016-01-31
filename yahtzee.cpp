@@ -16,6 +16,9 @@
  * made user input case-insensitive for
  * dice-reroll prompt.
  *
+ * Last Modified: 1/31/2016 by Brady Hyde
+ * Like Jon Snow, I know nothing (about C++ at least).
+ * So, I'm just adding this little chunk of comment in hopes of doing the least damage possible.
  *******************************/
 
 // TODO: switch to using arrays for scores

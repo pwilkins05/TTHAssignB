@@ -13,11 +13,10 @@
 // is prime or not. Returns T or F.
 // BUG: Not correctly determining primes. 
 // Here's a hint (and explanation about why the sqrt is used: http://stackoverflow.com/questions/5811151/why-do-we-check-upto-the-square-root-of-a-prime-number-to-determine-if-it-is-pri )
-
 function isPrime($number) {
 	$root = round(sqrt($number), 0);
 	$c = 2; // Counter variable; we know already that all ints are divisible by 1.
-	while ($c < $root) {
+	while ($c <= $root) {	// fixed, needed to be less than or equal to
 		if ($number % $c == 0)
 			return false;
 		$c++;
@@ -32,23 +31,39 @@ function isPrime($number) {
 <html>
 <head>
 	<title>Is it prime?</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<style type="text/css">
+		* {
+			margin: 0 auto;
+			text-align: center;
+		}
+	</style>
 </head>
 <body>
-	<h4>Plunk in an integer below and hit the "ENTER" key to evaluate its prime-ness or lack thereof:</h4><br />
-	<form method="POST">
-		<input type="text" name="num" placeholder="Enter an integer">
-	<form>
+	<h2>Plunk in an integer below and hit the "ENTER" key to evaluate its prime-ness or lack thereof:</h2><br />
+<div class="row">
+	<div class="col med-3">
+		<form class="form" method="POST">
+			<input type="text" name="num" placeholder="Enter an integer">
+		<form>
+	</div>	
+</div>
 </body>
 
 <?php
 
+
 if (isset($_POST['num'])) {
 // TODO: Add validation to verify that the number is an int.
 	$n = $_POST['num'];
-	if (isPrime($n)) 
-		echo($n . " is a prime number.<br />");
+	if (is_numeric($n)) {
+		if (isPrime($n)) 
+			echo("<br /><p class='lead'>" . $n . " is a prime number.</p><br />");
+		else
+			echo("<br /><p class='lead'>Nope. $n is not a prime number.</p><br />");
+	}
 	else
-		echo("Nope. $n is not a prime number.<br />");
+		echo "<br /><p class='lead'>Please enter a valid integer.</p><br />";
 }
 
 ?>

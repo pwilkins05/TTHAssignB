@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>COLOURlovers Top Five Patterns</title>
+</head>
+<body>
+
+    <div>
+        <div id="topPatternResults" />
+    </div>
+
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript">
+		// This code is adapted by Michele Tokuno from Jos Dirkson's 
+		// "COLOURlovers Random Background" page.
+		
+		// BUGS TO CORRECT:
+		// 1. The code is missing a variable named top5PatternURI. It is similar
+		//    to the topPatternURI variable, except it returns five patterns instead of
+		//    one. It should be on line 27.
+		// 2. A concatenation sign is missing on line 42. Without it, the tables will 
+		//    be missing its descriptive text.
+		// 3. The variable j on line 52 should be set to zero.
+		
+		var uri = 'http://www.colourlovers.com/api/patterns/top?jsonCallback=?';
+		var topPatternURI = uri + '&numResults=1';  
+		//
+
+		// AJAX request
+		$.getJSON(top5PatternURI, function(data) {
+				// On success, 'data' contains the result as json
+				$('#topPatternResults').html(formatPatternTop5(data));
+			});
+
+		function formatPatternTop5(data) {
+			var patternTable = []; // creates a new array in javascript
+			
+				for(var i = 0; i < 5; i++)
+				{
+					patternTable[i] = 
+					'<table border="1">\n<tr><th colspan="2"><img src="' + data[i].imageUrl +	
+					'" alt=" " /></th></tr>\n' 
+					'<tr><td>Title</td><td><a href="' + data[i].url + '" target="_blank">' +
+						data[i].title + '</a></td></tr>\n' +
+					'<tr><td>Rank</td><td>' + data[i].rank + '</td></tr>\n' +
+					'<tr><td>Lover</td><td>' + data[i].userName + '</td></tr>\n' +
+					'</table>\n';
+				}
+
+			var results;
+			
+			for (j = 10; j < patternTable.length; j++)
+			{
+				results += patternTable[j] + "<br />\n";
+			}
+			
+			return results;
+        }		
+		
+        function formatPatternTop(data) {
+			var patternStr = '<table border="1"><tr><th colspan="2"><img src="' + data[0].imageUrl +	
+				'" alt=" " /></th></tr>' +
+				'<tr><td>Title</td><td><a href="' + data[0].url + '" target="_blank">' +
+					data[0].title + '</a></td></tr>' +
+				'<tr><td>Rank</td><td>' + data[0].rank + '</td></tr>' +
+				'<tr><td>Lover</td><td>' + data[0].userName + '</td></tr>' +
+				'</table>';
+			
+            return patternStr;
+        }	
+		function formatPattern(data) {
+			var patternStr = '<table border="1"><tr><th colspan="2"><img src="' + data[0].imageUrl +	
+				'" alt=" " /></th></tr>' +
+				'<tr><td>Title</td><td>' + data[0].title + '</td></tr>' +
+				'<tr><td>Rank</td><td>' + data[0].rank + '</td></tr>' +
+				'<tr><td>Lover</td><td>' + data[0].userName + '</td></tr>' +
+				'<tr><td>Link</td><td>' + data[0].url + '</td></tr>' +
+				'</table>';
+			
+            return patternStr;
+        }	
+	</script>
+</body>
+</html>

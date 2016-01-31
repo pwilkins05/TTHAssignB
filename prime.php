@@ -7,7 +7,8 @@
 // (/srv/http, in my case) and open in your browser (localhost/prime.php). 
 // Enjoy!
 
-
+// Modified Comment by Tony Plueard 1/31/2016
+// I have never taken a PHP class and this code only looks slightly familiar to me.
 
 // isPrime evaluates whether user-input number
 // is prime or not. Returns T or F.

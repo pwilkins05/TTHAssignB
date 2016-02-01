@@ -27,8 +27,8 @@ def alphacode(pin):
 		pin = pin // 100
 		x = pin2 // 5
 		y = pin2 % 5
-		z = CONSONANTS[x]
-		w = VOWELS[y]
+		z = ##TODO Assign x to the CONSTANTS ARRAY##
+		w = ## TODO Assign y to the VOWELS ARRAY##
 		mnemonic = z + w + mnemonic
 	return mnemonic
 
@@ -72,7 +72,7 @@ def main():
 
 if __name__ == "__main__":
 	#run_tests()	 #FIXME: Comment this out when your program is working
-	main()	 #FIXME: Uncomment this when your program is working
+	#main()	 #FIXME: Uncomment this when your program is working
 
 
 

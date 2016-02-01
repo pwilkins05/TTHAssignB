@@ -19,6 +19,12 @@
  * Last Modified: 1/31/2016 by Brady Hyde
  * Like Jon Snow, I know nothing (about C++ at least).
  * So, I'm just adding this little chunk of comment in hopes of doing the least damage possible.
+
+* Last Modified: 1/31/2016 by Tony Plueard
+ * I have absolutely no idea what I am doing with C++ I took one class many terms ago 
+ * I understand what is going on but I am quite unsure of how to fix anything. So
+ * here is a little comment that I thought I would leave
+
  *******************************/
 
 // TODO: switch to using arrays for scores

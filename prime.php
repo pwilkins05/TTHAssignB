@@ -28,6 +28,8 @@ function isPrime($number) {
 
 // TODO: Make the below prettier. Add a reference to Bootstrap via CDN
 // and grid-ify it, or add some images, cheesy midi background music, snarky copy, etc.
+
+// Modified comments by Michele T: Added the folllowing: 1) Added a Jumbotron with a yellow background  2) Modified the stylesheet for the jumbotron 3) Added a break in the heading.
 ?>
 <html>
 <head>
@@ -38,16 +40,26 @@ function isPrime($number) {
 			margin: 0 auto;
 			text-align: center;
 		}
+		
+		.jumbotron
+		{
+			background: #ff0;
+		}
 	</style>
 </head>
 <body>
-	<h2>Plunk in an integer below and hit the "ENTER" key to evaluate its prime-ness or lack thereof:</h2><br />
-<div class="row">
-	<div class="col med-3">
-		<form class="form" method="POST">
-			<input type="text" name="num" placeholder="Enter an integer">
-		<form>
-	</div>	
+<div class="container body-content">
+	<div class="jumbotron">
+		<h2>Plunk in an integer below and hit the "ENTER" key<br />to evaluate its prime-ness or lack thereof:</h2><br />
+	</div>
+	
+	<div class="row">
+		<div class="col med-3">
+			<form class="form" method="POST">
+				<input type="text" name="num" placeholder="Enter an integer">
+			<form>
+		</div>	
+	</div>
 </div>
 </body>
 

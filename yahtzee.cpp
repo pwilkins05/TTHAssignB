@@ -432,4 +432,6 @@ int tabulateDice(int n, int d1, int d2, int d3, int d4, int d5)
 }
 
 
+// Just a comment from Michele T. I don't know enough C++ to edit this file, but still wanted to proove that I was able to clone the directory from Git.
+
 

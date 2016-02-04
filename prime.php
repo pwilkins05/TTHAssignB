@@ -10,6 +10,9 @@
 // Modified Comment by Tony Plueard 1/31/2016
 // I have never taken a PHP class and this code only looks slightly familiar to me.
 
+// Comment by Jonathan Lukasik 2/3/2016
+// Same as Tony, I have never done any php work, sorry.
+
 // isPrime evaluates whether user-input number
 // is prime or not. Returns T or F.
 // BUG: Not correctly determining primes. 

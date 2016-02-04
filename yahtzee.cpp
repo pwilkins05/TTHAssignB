@@ -21,14 +21,21 @@
  * So, I'm just adding this little chunk of comment in hopes of doing the least damage possible.
 
 * Last Modified: 1/31/2016 by Tony Plueard
- * I have absolutely no idea what I am doing with C++ I took one class many terms ago 
+ * I have absolutely no idea what I am doing with C++ I took one class many terms ago
  * I understand what is going on but I am quite unsure of how to fix anything. So
  * here is a little comment that I thought I would leave
 
+ Last Modified: 2/3/2016 by Jonathan Lukasik
+ * Switched all the dice to using arrays
+ * Switched all scoring to using arrays
+ * Added threeOfAKind and fourOfAKind scoring
+ * Fixed bug in getScoreOption(), if you enter a non integer, endlessly loops
+ * There is a looping quirk if you enter more then 1 letter when asked for input, doesnt break anything just looks bad in console.
+
  *******************************/
 
-// TODO: switch to using arrays for scores
-// TODO switch to using array for dice
+// TODO: switch to using arrays for scores //Finished by Jonathan Lukasik on 2/3/2016
+// TODO switch to using array for dice // Finished by Jonathan Lukasik on 2/3/2016
 // TODO: add yahtzee bonus score
 // TODO: implement scoring functions (see switch statement, line 125)
 // TODO: make ask reroll accept lowercase letters
@@ -37,138 +44,124 @@
 
 using namespace std;
 
-void printRoll(int n1, int n2, int n3, int n4, int n5);
+void printRoll(int dice[]);
 bool askReroll(int n);
 void printSeparator();
+
 /* void printScore(int onesScore, int twosScore, int threesScore, int foursScore,
                 int fivesScore, int sixesScore, int threeOfAKind,
                 int fourOfAKind, int fullHouse, int smallStraight,
-                int largeStraight, int yahtzee, int chance); */
-void printScore(int onesScore, int twosScore, int threesScore, int foursScore,
-                int fivesScore, int sixesScore);
-void printScoreLine(string name, int score);
-int getScoreOption(int onesScore, int twosScore, int threesScore, int foursScore,
-                   int fivesScore, int sixesScore, int threeOfAKind,
-                   int fourOfAKind, int fullHouse, int smallStraight,
-                   int largeStraight, int yahtzee, int chance);
-int tabulateDice(int n, int d1, int d2, int d3, int d4, int d5);
+                int largeStraight, int yahtzee, int chance);
+*/
 
+void printScore(int score[]);
+void printScoreLine(string name, int score);
+int getScoreOption(int score[]);
+int tabulateDice(int n, int dice[]);
+
+int scoreThreeOfAKind(int numDice[]);
+int scoreFourOfAKind(int numDice[]);
 const int NUM_CATEGORIES = 13;
 const int SIDES = 6;
 const int EMPTY = -1;
+const int NUM_DICE = 5;
 enum Category { ONES = 1, TWOS, THREES, FOURS, FIVES, SIXES, THREE_OF_A_KIND,
                     FOUR_OF_A_KIND, FULL_HOUSE, SMALL_STRAIGHT, LARGE_STRAIGHT,
-                    YAHTZEE, CHANCE };
+                    YAHTZEE, CHANCE};
 
 int main()
 {
 
-    int die1, die2, die3, die4, die5;
-    bool redo1, redo2, redo3, redo4, redo5;
-
+    int dice[NUM_DICE];
+    bool redoDice[NUM_DICE];
+    int score[NUM_CATEGORIES];
+    int diceNum[NUM_DICE]; //How many of each dice (ones, twos, threes, fours, fives, sixes)
     int ones, twos, threes, fours, fives, sixes;
 
-    int onesScore, twosScore, threesScore, foursScore, fivesScore, sixesScore;
-    int threeOfAKind;
-    int fourOfAKind;
-    int fullHouse;
-    int smallStraight;
-    int largeStraight;
-    int yahtzee;
-    int chance;
-
-    onesScore = twosScore = threesScore = foursScore = fivesScore = sixesScore = EMPTY;
-    threeOfAKind = fourOfAKind = fullHouse = smallStraight = largeStraight = yahtzee = chance = EMPTY;
+    for(int i = 0; i < NUM_CATEGORIES; i++)
+    {
+        score[i] = EMPTY;
+    }
 
     cout << "Welcome to Yahtzee!" << endl;
     srand(time(0));
 
-
-
     for (int turn = 0; turn < NUM_CATEGORIES; turn++)
     {
         int round = 1;
-        ones = twos = threes = fours = fives = sixes = 0;
-        die1 = rand() % SIDES + 1;
-        die2 = rand() % SIDES + 1;
-        die3 = rand() % SIDES + 1;
-        die4 = rand() % SIDES + 1;
-        die5 = rand() % SIDES + 1;
-
-        printRoll(die1, die2, die3, die4, die5);
+        for(int i = 0; i < NUM_DICE; i++)
+        {
+            dice[i] = rand() % SIDES + 1;
+            diceNum[i] = 0;
+        }
+        printRoll(dice);
 
         do
         {
-            redo1 = askReroll(1);
-            redo2 = askReroll(2);
-            redo3 = askReroll(3);
-            redo4 = askReroll(4);
-            redo5 = askReroll(5);
-
-            if (redo1)
+            for(int i = 0; i < NUM_DICE; i++)
             {
-                die1 = rand() % SIDES + 1;
-            }
-            if (redo2)
-            {
-                die2 = rand() % SIDES + 1;
-            }
-            if (redo3)
-            {
-                die3 = rand() % SIDES + 1;
-            }
-            if (redo4)
-            {
-                die4 = rand() % SIDES + 1;
-            }
-            if (redo5)
-            {
-                die5 = rand() % SIDES + 1;
+                redoDice[i] = askReroll(i + 1); // +1 used in askReroll for dice to appear for the user correctly
             }
 
-            printRoll(die1, die2, die3, die4, die5);
+            if (redoDice[0])
+            {
+                dice[0] = rand() % SIDES + 1;
+            }
+            if (redoDice[1])
+            {
+                dice[1] = rand() % SIDES + 1;
+            }
+            if (redoDice[2])
+            {
+                dice[2] = rand() % SIDES + 1;
+            }
+            if (redoDice[3])
+            {
+                dice[3] = rand() % SIDES + 1;
+            }
+            if (redoDice[4])
+            {
+                dice[4] = rand() % SIDES + 1;
+            }
+            printRoll(dice);
             round++;
-        } while ((redo1 || redo2 || redo3 || redo4 || redo5) && round < 3);
-
-        ones = tabulateDice(1, die1, die2, die3, die4, die5);
-        twos = tabulateDice(2, die1, die2, die3, die4, die5);
-        threes = tabulateDice(3, die1, die2, die3, die4, die5);
-        fours = tabulateDice(4, die1, die2, die3, die4, die5);
-        fives = tabulateDice(5, die1, die2, die3, die4, die5);
-        sixes = tabulateDice(6, die1, die2, die3, die4, die5);
-
-        int scoreOption = getScoreOption(onesScore, twosScore, threesScore, foursScore,
-                                         fivesScore, sixesScore, threeOfAKind,
-                                         fourOfAKind, fullHouse, smallStraight,
-                                         largeStraight, yahtzee, chance);
-
+        } while ((redoDice[0] || redoDice[1] || redoDice[2] || redoDice[3] || redoDice[4]) && round < 3);
+        diceNum[0] = tabulateDice(1, dice); //how many ones
+        diceNum[1] = tabulateDice(2, dice); //how many twos
+        diceNum[2] = tabulateDice(3, dice); //how many threes
+        diceNum[3] = tabulateDice(4, dice); //how many fours
+        diceNum[4] = tabulateDice(5, dice); //how many fives
+        diceNum[5] = tabulateDice(6, dice); //how many sixes
+        int scoreOption = getScoreOption(score);
         switch (scoreOption)
         {
             case ONES:
-                onesScore = ones;
+                score[0] = diceNum[0];
                 break;
             case TWOS:
-                twosScore = (twos * 2);
+                score[1] = (diceNum[1] * 2);
                 break;
             case THREES:
-                threesScore = (threes * 3);
+                score[2] = (diceNum[2] * 3);
                 break;
             case FOURS:
-                foursScore = (fours * 4);
+                score[3] = (diceNum[3] * 4);
                 break;
             case FIVES:
-                fivesScore = (fives * 5);
+                score[4] = (diceNum[4] * 5);
                 break;
             case SIXES:
-                sixesScore = (sixes * 6);
+                score[5] = (diceNum[5] * 6);
                 break;
-	} /*
             case THREE_OF_A_KIND:
-                threeOfAKind = scoreThreeOfAKind(ones, twos, threes, fours, fives, sixes);
+                score[6] = scoreThreeOfAKind(diceNum);
                 break;
             case FOUR_OF_A_KIND:
-                fourOfAKind = scoreFourOfAKind(ones, twos, threes, fours, fives, sixes);
+                score[7] = scoreFourOfAKind(diceNum);
                 break;
+        } /*
+
+
             case FULL_HOUSE:
                 fullHouse= scoreFullHouse(ones, twos, threes, fours, fives, sixes);
                 break;
@@ -185,10 +178,7 @@ int main()
                 chance = scoreChance(ones, twos, threes, fours, fives, sixes);
                 break;
         }*/
-
-        //printScore(onesScore, twosScore, threesScore, foursScore, fivesScore, sixesScore,
-                   //threeOfAKind, fourOfAKind, fullHouse, smallStraight, largeStraight, yahtzee, chance);
-	printScore(onesScore, twosScore, threesScore, foursScore, fivesScore, sixesScore);
+	printScore(score);
     }
 }
 
@@ -200,12 +190,16 @@ int main()
  * with blank lines before and after the print-out.
  *
  *********************************************************/
-void printRoll(int n1, int n2, int n3, int n4, int n5)
+void printRoll(int dice[NUM_DICE])
 {
     cout << endl;
     cout << "Your roll is:" << endl;
-    cout << n1 << " " << n2 << " " << n3 << " " << n4 << " " << n5 << endl;
-    cout << endl;
+    for(int i = 0; i < NUM_DICE; i++)
+    {
+        cout << dice[i] << " ";
+    }
+
+    cout << endl << endl;
 }
 
 /*********************************************************
@@ -236,6 +230,7 @@ bool askReroll(int n)
                 return false;
             default:
                 cout << "Invalid response" << endl;
+                break;
         }
     }
 
@@ -251,41 +246,38 @@ bool askReroll(int n)
  * for the yahtzee game in its current state.
  *
  ********************************/
-/*void printScore(int onesScore, int twosScore, int threesScore, int foursScore,
-                int fivesScore, int sixesScore, int threeOfAKind,
-                int fourOfAKind, int fullHouse, int smallStraight,
-                int largeStraight, int yahtzee, int chance)
-{*/
-void printScore(int onesScore, int twosScore, int threesScore, int foursScore,
-                int fivesScore, int sixesScore)
+
+void printScore(int score[NUM_CATEGORIES])
 {
     printSeparator();
-    printScoreLine("Ones", onesScore);
+    printScoreLine("Ones", score[0]);
     printSeparator();
-    printScoreLine("Twos", twosScore);
+    printScoreLine("Twos", score[1]);
     printSeparator();
-    printScoreLine("Threes", threesScore);
+    printScoreLine("Threes", score[2]);
     printSeparator();
-    printScoreLine("Fours", foursScore);
+    printScoreLine("Fours", score[3]);
     printSeparator();
-    printScoreLine("Fives", fivesScore);
+    printScoreLine("Fives", score[4]);
     printSeparator();
-    printScoreLine("Sixes", sixesScore);
+    printScoreLine("Sixes", score[5]);
+    printSeparator();
+    printScoreLine("Three of a kind", score[6]);
+    printSeparator();
+    printScoreLine("Four of a kind", score[7]);
     printSeparator();
 /*
-    printScoreLine("Three of a kind", threeOfAKind);
+
+
+    printScoreLine("Full House", score[8]);
     printSeparator();
-    printScoreLine("Four of a kind", fourOfAKind);
+    printScoreLine("Small Straight", score[9]);
     printSeparator();
-    printScoreLine("Full House", fullHouse);
+    printScoreLine("Large Straight", score[10]);
     printSeparator();
-    printScoreLine("Small Straight", smallStraight);
+    printScoreLine("Yahtzee", score[11]);
     printSeparator();
-    printScoreLine("Large Straight", largeStraight);
-    printSeparator();
-    printScoreLine("Yahtzee", yahtzee);
-    printSeparator();
-    printScoreLine("Chance", chance);
+    printScoreLine("Chance", score[12]);
     printSeparator();*/
 }
 
@@ -336,11 +328,9 @@ void printScoreLine(string name, int score)
  * to a valid category.  It also check to make sure that the selected category
  * has not yet been scored (unscored categories contain the value EMPTY).
  *
+ * Fixed endless loop if entered non integer - Jonathan Lukasik 2/3/2016
  ********************************/
-int getScoreOption(int onesScore, int twosScore, int threesScore, int foursScore,
-                   int fivesScore, int sixesScore, int threeOfAKind,
-                   int fourOfAKind, int fullHouse, int smallStraight,
-                   int largeStraight, int yahtzee, int chance)
+int getScoreOption(int score[NUM_CATEGORIES])
 {
     int ans;
     bool valid = false;
@@ -362,58 +352,64 @@ int getScoreOption(int onesScore, int twosScore, int threesScore, int foursScore
     {
         cout << "How would you like to score this? ";
         cin >> ans;
-        while (ans < 0 || ans > NUM_CATEGORIES)
+        if(ans > 0 && ans <= NUM_CATEGORIES )
         {
-            cout << "Please enter a number between 1 and " << NUM_CATEGORIES << ": ";
-            cin >> ans;
-        }
-        switch (ans)
-        {
+
+            switch (ans)
+            {
             case ONES:
-                if (onesScore == EMPTY) valid = true;
+                if (score[0] == EMPTY) valid = true;
                 break;
             case TWOS:
-                if (twosScore == EMPTY) valid = true;
+                if (score[1] == EMPTY) valid = true;
                 break;
             case THREES:
-                if (threesScore == EMPTY) valid = true;
+                if (score[2] == EMPTY) valid = true;
                 break;
             case FOURS:
-                if (foursScore == EMPTY) valid = true;
+                if (score[3] == EMPTY) valid = true;
                 break;
             case FIVES:
-                if (fivesScore == EMPTY) valid = true;
+                if (score[4] == EMPTY) valid = true;
                 break;
             case SIXES:
-                if (sixesScore == EMPTY) valid = true;
+                if (score[5] == EMPTY) valid = true;
                 break;
             case THREE_OF_A_KIND:
-                if (threeOfAKind == EMPTY) valid = true;
+                if (score[6] == EMPTY) valid = true;
                 break;
             case FOUR_OF_A_KIND:
-                if (fourOfAKind == EMPTY) valid = true;
+                if (score[7] == EMPTY) valid = true;
                 break;
             case FULL_HOUSE:
-                if (fullHouse == EMPTY) valid = true;
+                if (score[8] == EMPTY) valid = true;
                 break;
             case SMALL_STRAIGHT:
-                if (smallStraight == EMPTY) valid = true;
+                if (score[9] == EMPTY) valid = true;
                 break;
             case LARGE_STRAIGHT:
-                if (largeStraight == EMPTY) valid = true;
+                if (score[10] == EMPTY) valid = true;
                 break;
             case YAHTZEE:
-                if (yahtzee == EMPTY) valid = true;
+                if (score[11] == EMPTY) valid = true;
                 break;
             case CHANCE:
-                if (chance == EMPTY) valid = true;
+                if (score[12] == EMPTY) valid = true;
                 break;
+            }
+            if (!valid)
+            {
+                cout << "That category has already been used" << endl;
+            }
         }
-        if (!valid)
+        else
         {
-            cout << "That category has already been used" << endl;
+            cout << "Invalid input..." << endl;
+            cout << "Please enter a number between 1 and " << NUM_CATEGORIES << ": ";
+            cin.clear();
+            cin.ignore();
         }
-    } while (!valid);
+    } while(!valid);
 
     return ans;
 }
@@ -426,14 +422,45 @@ int getScoreOption(int onesScore, int twosScore, int threesScore, int foursScore
  * which show the value n.
  *
  ********************************/
-int tabulateDice(int n, int d1, int d2, int d3, int d4, int d5)
+int tabulateDice(int n, int dice[NUM_DICE])
 {
     int ans = 0;
-    if (d1 == n) ans++;
-    if (d2 == n) ans++;
-    if (d3 == n) ans++;
-    if (d4 == n) ans++;
-    if (d5 == n) ans++;
+    for (int i = 0; i < NUM_DICE; i++)
+    {
+        if (dice[i] == n)
+        {
+            ans++;
+        }
+    }
+    return ans;
+}
+
+
+/********************************
+ *
+ * Scoring functions
+ * --------------------
+ * threeOfAKind and fourOfAKind return sum of number of dice
+ ********************************/
+int scoreThreeOfAKind(int diceNum[NUM_DICE])
+{
+    int ans = 0;
+    for(int i = 0; i < NUM_DICE; i++)
+    {
+        if (diceNum[i] >= 3)
+            ans = diceNum[i] * (i + 1);
+    }
+    return ans;
+}
+
+int scoreFourOfAKind(int diceNum[NUM_DICE])
+{
+    int ans = 0;
+    for(int i = 0; i < NUM_DICE; i++)
+    {
+        if (diceNum[i] >= 4)
+            ans = diceNum[i] * (i + 1);
+    }
     return ans;
 }
 
